@@ -1,5 +1,6 @@
 import win32evtlog
 import util
+from filter import filter
 
 #setting
 server = 'localhost'
@@ -25,6 +26,8 @@ def winEvtMonitor():
             event = win32evtlog.ReadEventLog(hand, flags, 0)[0]
             # util.printRecord(event)
             util.logRecord(event)
+            filter(event)
+            # update prev
             prev = total
         
     
