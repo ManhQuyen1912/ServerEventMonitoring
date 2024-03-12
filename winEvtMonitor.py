@@ -1,0 +1,32 @@
+import win32evtlog
+import util
+
+#setting
+server = 'localhost'
+logtype = 'System'
+flags = win32evtlog.EVENTLOG_BACKWARDS_READ|win32evtlog.EVENTLOG_SEQUENTIAL_READ
+
+
+def winEvtMonitor():
+    #open event log
+    hand = win32evtlog.OpenEventLog(server, logtype)
+    
+
+    #notify change when total event log change
+    prev = 0
+
+    while True:
+    
+        total = win32evtlog.GetNumberOfEventLogRecords(hand)
+        if total != prev:
+            # update new handle
+            hand = win32evtlog.OpenEventLog(server, logtype)
+            # print new event
+            event = win32evtlog.ReadEventLog(hand, flags, 0)[0]
+            util.printRecord(event)
+            prev = total
+        
+    
+
+    
+
