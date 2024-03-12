@@ -23,7 +23,8 @@ def winEvtMonitor():
             hand = win32evtlog.OpenEventLog(server, logtype)
             # print new event
             event = win32evtlog.ReadEventLog(hand, flags, 0)[0]
-            util.printRecord(event)
+            # util.printRecord(event)
+            util.logRecord(event)
             prev = total
         
     
