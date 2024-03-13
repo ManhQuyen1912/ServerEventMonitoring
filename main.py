@@ -15,10 +15,11 @@ def run_flask():
 def run_monitor():
     winEvtMonitor.winEvtMonitor()
 
-#run the thread
-if __name__ == '__main__':
-    monitor = threading.Thread(target=run_monitor).start()
-    flask = threading.Thread(target=run_flask).start()
+
+def main():
+    t2 = threading.Thread(target=run_monitor).start()
+    t1 = threading.Thread(target=run_flask).start()
     UI = subprocess.Popen(['python', 'app.py'])
     
-
+if __name__ == "__main__":
+    main()
