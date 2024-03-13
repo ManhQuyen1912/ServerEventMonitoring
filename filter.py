@@ -19,7 +19,8 @@ def timeLimitCheck(timeRecord, dateStart, dateEnd, timeStart, timeEnd):
 
 
 def filter(record):
-    print('announceFilterList' + annouceFilterList)
+    return False
+    # print('announceFilterList' + annouceFilterList)
     # for filter in annouceFilterList:
     #     #TODO: finish filter condition
     #     if (filter[0] == record.EventCategory or filter[0]=='') and 1==1:
