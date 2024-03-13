@@ -1,5 +1,7 @@
 import threading
 from flask import Flask, request, jsonify
+import subprocess
+
 import winEvtMonitor
 from blueprint import bp
 
@@ -16,9 +18,6 @@ def run_monitor():
 def main():
     t2 = threading.Thread(target=run_monitor).start()
     t1 = threading.Thread(target=run_flask).start()
-
-#run the thread
-if __name__ == '__main__':
-    main()
+    UI = subprocess.Popen(['python', 'app.py'])
     
 
