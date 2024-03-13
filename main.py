@@ -17,8 +17,8 @@ def run_monitor():
 
 #run the thread
 if __name__ == '__main__':
-    t2 = threading.Thread(target=run_monitor).start()
-    t1 = threading.Thread(target=run_flask).start()
+    monitor = threading.Thread(target=run_monitor).start()
+    flask = threading.Thread(target=run_flask).start()
     UI = subprocess.Popen(['python', 'app.py'])
     
 
