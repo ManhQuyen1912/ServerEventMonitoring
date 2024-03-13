@@ -20,4 +20,5 @@ def main():
     t1 = threading.Thread(target=run_flask).start()
     UI = subprocess.Popen(['python', 'app.py'])
     
-
+if __name__ == "__main__":
+    main()
