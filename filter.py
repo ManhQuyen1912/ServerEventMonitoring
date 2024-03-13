@@ -14,20 +14,45 @@ def timeLimitCheck(timeRecord, dateStart, dateEnd, timeStart, timeEnd):
     timeRc = timeRC.time()
 
 
+    if dateStart != '':
+        dateStart = datetime.strptime(dateStart, "%Y-%m-%d")
+    else:
+        dateStart = datetime.strptime("1970-01-01", "%Y-%m-%d")
+    
+    if dateEnd != '':
+        dateEnd = datetime.strptime(dateEnd, "%Y-%m-%d")
+    else:
+        dateEnd = datetime.strptime("9999-12-31", "%Y-%m-%d")
 
+    if timeStart != '':
+        timeStart = datetime.strptime(timeStart, "%H:%M:%S")
+    else:
+        timeStart = datetime.strptime("00:00:00", "%H:%M:%S")
+    
+    if timeEnd != '':
+        timeEnd = datetime.strptime(timeEnd, "%H:%M:%S")
+    else:
+        timeEnd = datetime.strptime("23:59:59", "%H:%M:%S")
+
+    # check all condition
+    if dateRc >= dateStart and dateRc <= dateEnd and timeRc >= timeStart and timeRc <= timeEnd:
+        return True
+    else:
+        return False
     
 
-
 def filter(record):
-    return False
-    # print('announceFilterList' + annouceFilterList)
-    # for filter in annouceFilterList:
-    #     #TODO: finish filter condition
-    #     if (filter[0] == record.EventCategory or filter[0]=='') and 1==1:
-    #         return action(filter[5])
+    for filter in annouceFilterList:
+        if record.EventCategory == filter[0]:
+            if timeLimitCheck(record.TimeGenerated, filter[1], filter[2], filter[3], filter[4]):
+                if record.SourceName == filter[5]:
+                    if record.EventID == filter[6]:
+                        if util.evtTypeToString(record) == filter[7]:
+                            doAction(filter[8])
+    return
         
 
-def action(action):
+def doAction(action):
     if action == "log":
         print("Log")
     elif action == "email":
