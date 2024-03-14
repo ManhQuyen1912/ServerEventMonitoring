@@ -1,6 +1,7 @@
 import win32evtlog
 import util
 from filter import filter
+from SqlService import insert
 
 #setting
 server = 'localhost'
@@ -25,7 +26,8 @@ def winEvtMonitor():
             # print new event
             event = win32evtlog.ReadEventLog(hand, flags, 0)[0]
             # util.printRecord(event)
-            util.logRecord(event)
+            # util.logRecord(event)
+            insert(event)
             filter(event)
             # update prev
             prev = total
