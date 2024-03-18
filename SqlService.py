@@ -54,8 +54,15 @@ except mysql.connector.Error as err:
 
 cursor = cnx.cursor()
 
-def query():
-  return
+def query(evtCategory, dateStart, dateEnd, timeStart, timeEnd, sourceName, evtID, evtType, action):
+  queryStr = ("SELECT * FROM " + databaseConfig['eventTable'] + 
+              " WHERE " + columnConfig['eventTable']['Category'] + " = " + evtCategory +
+              " AND " + columnConfig['eventTable']['Time generated'] + " BETWEEN " + dateStart + " AND " + dateEnd +
+              " AND " + columnConfig['eventTable']['Source name'] + " = " + sourceName +
+              " AND " + columnConfig['eventTable']['evntID'] + " = " + evtID +
+              " AND " + columnConfig['eventTable']['Type'] + " = " + evtType)
+  cursor.execute(queryStr)
+  return cursor.fetchall()
 
 def insert(record):
   add_record = ("INSERT INTO " + databaseConfig['eventTable'] + " "

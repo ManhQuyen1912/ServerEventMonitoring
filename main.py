@@ -17,8 +17,8 @@ def run_monitor():
 
 
 def main():
-    t2 = threading.Thread(target=run_monitor).start()
-    t1 = threading.Thread(target=run_flask).start()
+    monitorThread = threading.Thread(target=run_monitor).start()
+    flaskThread = threading.Thread(target=run_flask).start()
     UI = subprocess.Popen(['python', 'app.py'])
     db = subprocess.Popen(['python', 'SqlService.py'])
     
