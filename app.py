@@ -4,14 +4,14 @@ import ttkbootstrap as tb
 from tkinter import ttk
 from main import *
 from addfiltergui import *
-from table import *
+from table import * 
 
 root = tb.Window(themename="darkly")
 root.title("Server Monitor Event Software")
 root.maxsize(1200, 1600)
 root.configure(bg="gray48")
 
-tb.Label(root,text="Event Annouce",background="gray48",font=("helvatica",15)).grid()
+tb.Label(root,text="Event Annouce",background="gray48",font=("helvatica",18)).grid()
 
 tree = create_tree()
 txt="None\t2024-03-13 15:07:22\tService Control Manager\t1073748864\tInformation\t('Background Intelligent Transfer Service', 'auto start', 'demand start', 'BITS')"

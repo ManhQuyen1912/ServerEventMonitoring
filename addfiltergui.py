@@ -84,30 +84,31 @@ def openAddFilterWindow():
 
     # Function Get data from Entry
     def get_data():
-        if(evtCatL.get()==''):
+        if(entry1.get()==''):
             evtCat = ''
         else:   
-            evtCat = evtCatL.get()
-        if(srcNameL.get()==''):
+            evtCat = entry1.get()
+        if(entry2.get()==''):
             srcName = ''
         else:
-            srcName = srcNameL.get()
-        if(timeStL.get()==''):
+            srcName = entry2.get()
+        if(entry3.get()==''):
             timeSt = ''
         else:
-            timeSt = timeStL.get()
-        if(timeEndL.get()==''):
+            timeSt = entry3.get()
+        if(entry4.get()==''):
             timeEnd = ''
         else:
-            timeEnd = timeEndL.get()
-        if(evtIDL.get()==''):
+            timeEnd = entry4.get()
+        if(entry5.get()==''):
             evtID = ''
         else:
-            evtID = evtIDL.get()
-        if(evtTypeL.get()==''):
+            evtID = entry5.get()
+        if(entry6.get()==''):
             evtType = ''
         else:
-            evtType = evtTypeL.get()    
+            evtType = entry6.get()   
+    
 
     # Colors: default, primary, secondary, success, info, warning, danger, light, dark
     button_filter = tb.Button(af,text="Filter",bootstyle="success,outline",command=get_data).grid()

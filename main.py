@@ -1,9 +1,7 @@
 import threading
 from flask import Flask, request, jsonify
 import subprocess
-
 import winEvtMonitor
-from blueprint import bp
 
 #flask app
 app = Flask(__name__)
