@@ -5,7 +5,6 @@ import winEvtMonitor
 
 #flask app
 app = Flask(__name__)
-app.register_blueprint(bp)
 #function to run the thread
 def run_flask():
     app.run()

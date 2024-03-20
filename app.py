@@ -4,7 +4,7 @@ import ttkbootstrap as tb
 from tkinter import ttk
 from main import *
 from addfiltergui import *
-from table import * 
+from table import *
 
 root = tb.Window(themename="darkly")
 root.title("Server Monitor Event Software")
