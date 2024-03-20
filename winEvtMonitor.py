@@ -28,6 +28,7 @@ def winEvtMonitor():
             # util.printRecord(event)
             # util.logRecord(event)
             insert(event)
+            print("New event added")
             filter(event)
             # update prev
             prev = total

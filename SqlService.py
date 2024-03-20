@@ -13,7 +13,7 @@ config = {
 
 databaseConfig = {
     'eventTable': 'events',
-    'filterTable': 'filters_backup'
+    'filterTable': 'filter_backup'
 }
 
 columnConfig = {
@@ -69,7 +69,7 @@ def insert(record):
                "(" + columnConfig['eventTable']['id'] + ", " + columnConfig['eventTable']['Category'] + ", " + columnConfig['eventTable']['Time generated'] + ", " + columnConfig['eventTable']['Source name'] + ", " + columnConfig['eventTable']['evntID'] + ", " + columnConfig['eventTable']['Type'] + ", " + columnConfig['eventTable']['Strings'] + ") "
                "VALUES (%s, %s, %s, %s, %s, %s, %s)")
   # use the current number of record in database as id
-  getNumRecord = ("SELECT COUNT(*) FROM events")
+  getNumRecord = ("SELECT COUNT(*) FROM " + databaseConfig['eventTable'])
   cursor.execute(getNumRecord)
   id = str(cursor.fetchone()[0] + 1)
 
@@ -89,7 +89,7 @@ def backup_filter(filter):
                 "(" + columnConfig['filterTable']['id'] + ", " + columnConfig['filterTable']['Category'] + ", " + columnConfig['filterTable']['dateStart'] + ", " + columnConfig['filterTable']['dateEnd'] + ", " + columnConfig['filterTable']['timeStart'] + ", " + columnConfig['filterTable']['timeEnd'] + ", " + columnConfig['filterTable']['sourceName'] + ", " + columnConfig['filterTable']['evtID'] + ", " + columnConfig['filterTable']['evtType'] + ", " + columnConfig['filterTable']['action'] + ") "
                 "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)")
     # use the current number of record in database as id
-    getNumRecord = ("SELECT COUNT(*) FROM filters_backup")
+    getNumRecord = ("SELECT COUNT(*) FROM " + databaseConfig['filterTable'])
     cursor.execute(getNumRecord)
     id = str(cursor.fetchone()[0] + 1)
 
