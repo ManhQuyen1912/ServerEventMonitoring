@@ -1,13 +1,10 @@
 import threading
 from flask import Flask, request, jsonify
 import subprocess
-
 import winEvtMonitor
-from blueprint import bp
 
 #flask app
 app = Flask(__name__)
-app.register_blueprint(bp)
 #function to run the thread
 def run_flask():
     app.run()
