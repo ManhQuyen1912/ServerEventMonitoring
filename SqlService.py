@@ -2,6 +2,7 @@ import mysql.connector
 from mysql.connector import errorcode
 import win32evtlog
 import util
+from filter import addFilter
 
 config = {
     'user': 'root',
@@ -38,9 +39,16 @@ columnConfig = {
       'Type': 'Type',
       'Strings': 'Strings'
   }
-      
-      
+           
 }
+def loadFilter():
+    queryStr = ("SELECT * FROM " + databaseConfig['filterTable'])
+    cursor.execute(queryStr)
+    filters = cursor.fetchall()
+    for filter in filters:
+        addFilter(filter[1], filter[2], filter[3], filter[4], filter[5], filter[6], filter[7], filter[8], filter[9])
+        
+
 
 try:
   cnx = mysql.connector.connect(**config)
@@ -53,6 +61,7 @@ except mysql.connector.Error as err:
     print(err)
 
 cursor = cnx.cursor()
+loadFilter()
 
 def query(evtCategory, dateStart, dateEnd, timeStart, timeEnd, sourceName, evtID, evtType, action):
   queryStr = ("SELECT * FROM " + databaseConfig['eventTable'] + 
@@ -106,6 +115,7 @@ def backup_filter(filter):
     data_record = (id, category, dateStart, dateEnd, timeStart, timeEnd, sourceName, evtID, evtType, action)
     cursor.execute(add_record, data_record)
     cnx.commit()
+
 
                   
                   
