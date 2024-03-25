@@ -1,46 +1,23 @@
 import mysql.connector
 from mysql.connector import errorcode
-import win32evtlog
 import util
 from filter import addFilter
+import Configuration
 
-config = {
-    'user': 'root',
-    'password': '1234',
-    'host': 'localhost',
-    'database': 'hpt-winevntmnt',
-    'raise_on_warnings': True
-}
+fileConfig = Configuration.Configuration()
 
-databaseConfig = {
-    'eventTable': 'events',
-    'filterTable': 'filter_backup'
-}
+config = fileConfig.get_all('DATABASE')
+# jsonize the config
+config = {key: value for key, value in config.items()}
+config['raise_on_warnings'] = bool(config['raise_on_warnings'])
 
-columnConfig = {
-  'filterTable': {
-      'id': 'idfilter_backup',
-      'Category': 'evtCategory',
-      'dateStart': 'dateStart',
-      'dateEnd': 'dateEnd',
-      'timeStart': 'timeStart',
-      'timeEnd': 'timeEnd',
-      'sourceName': 'sourceName',
-      'evtID': 'evtID',
-      'evtType': 'type',
-      'action': 'Action'
-  },
-  'eventTable': {
-      'id': 'idEvents',
-      'Category': 'Category',
-      'Time generated': '`Time generated`',
-      'Source name': '`Source name`',
-      'evntID': 'ID',
-      'Type': 'Type',
-      'Strings': 'Strings'
-  }
-           
-}
+databaseConfig = fileConfig.get_all('TABLENAME')
+
+columnConfig = fileConfig.get_all('COLUMNNAME')
+#jsonize the config
+columnConfig = {key: {key2: value2 for key2, value2 in value.items()} for key, value in columnConfig.items()}
+
+
 def loadFilter():
     queryStr = ("SELECT * FROM " + databaseConfig['filterTable'])
     cursor.execute(queryStr)
