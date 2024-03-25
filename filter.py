@@ -62,4 +62,3 @@ def doAction(action):
     else:
         print("Invalid action")
 
-# def searchRecord(filter):

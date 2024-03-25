@@ -12,6 +12,7 @@ def run_flask():
 def run_monitor():
     winEvtMonitor.winEvtMonitor()
 
+
 def main():
     t2 = threading.Thread(target=run_monitor).start()
     t1 = threading.Thread(target=run_flask).start()
