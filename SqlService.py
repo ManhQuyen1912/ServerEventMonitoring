@@ -3,6 +3,7 @@ from mysql.connector import errorcode
 import util
 from filter import addFilter
 import Configuration
+import json
 
 fileConfig = Configuration.Configuration()
 
@@ -15,11 +16,13 @@ databaseConfig = fileConfig.get_all('TABLENAME')
 
 columnConfig = fileConfig.get_all('COLUMNNAME')
 #jsonize the config
-columnConfig = {key: {key2: value2 for key2, value2 in value.items()} for key, value in columnConfig.items()}
-
+columnConfig = {key: value for key, value in columnConfig.items()}
+# jsonize items inside
+columnConfig['eventtable'] = json.loads(columnConfig['eventtable'].replace("'", '"'))
+columnConfig['filtertable'] = json.loads(columnConfig['filtertable'].replace("'", '"'))
 
 def loadFilter():
-    queryStr = ("SELECT * FROM " + databaseConfig['filterTable'])
+    queryStr = ("SELECT * FROM " + databaseConfig['filtertable'])
     cursor.execute(queryStr)
     filters = cursor.fetchall()
     for filter in filters:
@@ -41,21 +44,21 @@ cursor = cnx.cursor()
 loadFilter()
 
 def query(evtCategory, dateStart, dateEnd, timeStart, timeEnd, sourceName, evtID, evtType, action):
-  queryStr = ("SELECT * FROM " + databaseConfig['eventTable'] + 
-              " WHERE " + columnConfig['eventTable']['Category'] + " = " + evtCategory +
-              " AND " + columnConfig['eventTable']['Time generated'] + " BETWEEN " + dateStart + " AND " + dateEnd +
-              " AND " + columnConfig['eventTable']['Source name'] + " = " + sourceName +
-              " AND " + columnConfig['eventTable']['evntID'] + " = " + evtID +
-              " AND " + columnConfig['eventTable']['Type'] + " = " + evtType)
+  queryStr = ("SELECT * FROM " + databaseConfig['eventtable'] + 
+              " WHERE " + columnConfig['eventtable']['Category'] + " = " + evtCategory +
+              " AND " + columnConfig['eventtable']['Time generated'] + " BETWEEN " + dateStart + " AND " + dateEnd +
+              " AND " + columnConfig['eventtable']['Source name'] + " = " + sourceName +
+              " AND " + columnConfig['eventtable']['evntID'] + " = " + evtID +
+              " AND " + columnConfig['eventtable']['Type'] + " = " + evtType)
   cursor.execute(queryStr)
   return cursor.fetchall()
 
 def insert(record):
-  add_record = ("INSERT INTO " + databaseConfig['eventTable'] + " "
-               "(" + columnConfig['eventTable']['id'] + ", " + columnConfig['eventTable']['Category'] + ", " + columnConfig['eventTable']['Time generated'] + ", " + columnConfig['eventTable']['Source name'] + ", " + columnConfig['eventTable']['evntID'] + ", " + columnConfig['eventTable']['Type'] + ", " + columnConfig['eventTable']['Strings'] + ") "
+  add_record = ("INSERT INTO " + databaseConfig['eventtable'] + " "
+               "(" + columnConfig['eventtable']['id'] + ", " + columnConfig['eventtable']['Category'] + ", " + columnConfig['eventtable']['Time generated'] + ", " + columnConfig['eventtable']['Source name'] + ", " + columnConfig['eventtable']['evntID'] + ", " + columnConfig['eventtable']['Type'] + ", " + columnConfig['eventtable']['Strings'] + ") "
                "VALUES (%s, %s, %s, %s, %s, %s, %s)")
   # use the current number of record in database as id
-  getNumRecord = ("SELECT COUNT(*) FROM " + databaseConfig['eventTable'])
+  getNumRecord = ("SELECT COUNT(*) FROM " + databaseConfig['eventtable'])
   cursor.execute(getNumRecord)
   id = str(cursor.fetchone()[0] + 1)
 
@@ -71,11 +74,11 @@ def insert(record):
   cnx.commit()
 
 def backup_filter(filter):
-    add_record = ("INSERT INTO " + databaseConfig['filterTable'] + " "
-                "(" + columnConfig['filterTable']['id'] + ", " + columnConfig['filterTable']['Category'] + ", " + columnConfig['filterTable']['dateStart'] + ", " + columnConfig['filterTable']['dateEnd'] + ", " + columnConfig['filterTable']['timeStart'] + ", " + columnConfig['filterTable']['timeEnd'] + ", " + columnConfig['filterTable']['sourceName'] + ", " + columnConfig['filterTable']['evtID'] + ", " + columnConfig['filterTable']['evtType'] + ", " + columnConfig['filterTable']['action'] + ") "
+    add_record = ("INSERT INTO " + databaseConfig['filtertable'] + " "
+                "(" + columnConfig['filtertable']['id'] + ", " + columnConfig['filtertable']['Category'] + ", " + columnConfig['filtertable']['dateStart'] + ", " + columnConfig['filtertable']['dateEnd'] + ", " + columnConfig['filtertable']['timeStart'] + ", " + columnConfig['filtertable']['timeEnd'] + ", " + columnConfig['filtertable']['sourceName'] + ", " + columnConfig['filtertable']['evtID'] + ", " + columnConfig['filtertable']['evtType'] + ", " + columnConfig['filtertable']['action'] + ") "
                 "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)")
     # use the current number of record in database as id
-    getNumRecord = ("SELECT COUNT(*) FROM " + databaseConfig['filterTable'])
+    getNumRecord = ("SELECT COUNT(*) FROM " + databaseConfig['filtertable'])
     cursor.execute(getNumRecord)
     id = str(cursor.fetchone()[0] + 1)
 

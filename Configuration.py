@@ -92,7 +92,17 @@ class Configuration:
         for section in self.config.sections():
             sections[section] = self.config[section].items()
         return sections
-    
-# config = Configuration()
-# if (bool(config.get('DATABASE', 'raise_on_warnings')) == True):
-#     print("boolean works")
+
+# import json
+# fileConfig = Configuration()
+# columnConfig = fileConfig.get_all('COLUMNNAME')
+# columnConfig = {key: value for key, value in columnConfig.items()}
+# #jsonize the columnConfig['eventtable'] and columnConfig['filtertable']
+# print(columnConfig['filtertable'])
+# testString = '{"name": "John Smith", "age": 30, "city": "New York"}'
+
+# # replace single quote with double quote
+# columnConfig['eventtable'] = json.loads(columnConfig['eventtable'].replace("'", '"'))
+# # print(jsonObj)
+
+# print(columnConfig['eventtable']['id'])
