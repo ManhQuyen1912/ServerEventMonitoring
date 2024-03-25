@@ -1,15 +1,31 @@
 import mysql.connector
 from mysql.connector import errorcode
-import win32evtlog
 import util
+from filter import addFilter
+import Configuration
 
-config = {
-    'user': 'root',
-    'password': '1234',
-    'host': 'localhost',
-    'database': 'hpt-winevntmnt',
-    'raise_on_warnings': True
-}
+fileConfig = Configuration.Configuration()
+
+config = fileConfig.get_all('DATABASE')
+# jsonize the config
+config = {key: value for key, value in config.items()}
+config['raise_on_warnings'] = bool(config['raise_on_warnings'])
+
+databaseConfig = fileConfig.get_all('TABLENAME')
+
+columnConfig = fileConfig.get_all('COLUMNNAME')
+#jsonize the config
+columnConfig = {key: {key2: value2 for key2, value2 in value.items()} for key, value in columnConfig.items()}
+
+
+def loadFilter():
+    queryStr = ("SELECT * FROM " + databaseConfig['filterTable'])
+    cursor.execute(queryStr)
+    filters = cursor.fetchall()
+    for filter in filters:
+        addFilter(filter[1], filter[2], filter[3], filter[4], filter[5], filter[6], filter[7], filter[8], filter[9])
+        
+
 
 try:
   cnx = mysql.connector.connect(**config)
@@ -22,16 +38,24 @@ except mysql.connector.Error as err:
     print(err)
 
 cursor = cnx.cursor()
+loadFilter()
 
-def query():
-  return
+def query(evtCategory, dateStart, dateEnd, timeStart, timeEnd, sourceName, evtID, evtType, action):
+  queryStr = ("SELECT * FROM " + databaseConfig['eventTable'] + 
+              " WHERE " + columnConfig['eventTable']['Category'] + " = " + evtCategory +
+              " AND " + columnConfig['eventTable']['Time generated'] + " BETWEEN " + dateStart + " AND " + dateEnd +
+              " AND " + columnConfig['eventTable']['Source name'] + " = " + sourceName +
+              " AND " + columnConfig['eventTable']['evntID'] + " = " + evtID +
+              " AND " + columnConfig['eventTable']['Type'] + " = " + evtType)
+  cursor.execute(queryStr)
+  return cursor.fetchall()
 
 def insert(record):
-  add_record = ("INSERT INTO events "
-               "(idEvents, Category, `Time generated`, `Source name`, ID, Type, Strings) "
+  add_record = ("INSERT INTO " + databaseConfig['eventTable'] + " "
+               "(" + columnConfig['eventTable']['id'] + ", " + columnConfig['eventTable']['Category'] + ", " + columnConfig['eventTable']['Time generated'] + ", " + columnConfig['eventTable']['Source name'] + ", " + columnConfig['eventTable']['evntID'] + ", " + columnConfig['eventTable']['Type'] + ", " + columnConfig['eventTable']['Strings'] + ") "
                "VALUES (%s, %s, %s, %s, %s, %s, %s)")
   # use the current number of record in database as id
-  getNumRecord = ("SELECT COUNT(*) FROM events")
+  getNumRecord = ("SELECT COUNT(*) FROM " + databaseConfig['eventTable'])
   cursor.execute(getNumRecord)
   id = str(cursor.fetchone()[0] + 1)
 
@@ -45,3 +69,30 @@ def insert(record):
   data_record = (id, category, time, source, eventID, eventType, eventStrings)
   cursor.execute(add_record, data_record)
   cnx.commit()
+
+def backup_filter(filter):
+    add_record = ("INSERT INTO " + databaseConfig['filterTable'] + " "
+                "(" + columnConfig['filterTable']['id'] + ", " + columnConfig['filterTable']['Category'] + ", " + columnConfig['filterTable']['dateStart'] + ", " + columnConfig['filterTable']['dateEnd'] + ", " + columnConfig['filterTable']['timeStart'] + ", " + columnConfig['filterTable']['timeEnd'] + ", " + columnConfig['filterTable']['sourceName'] + ", " + columnConfig['filterTable']['evtID'] + ", " + columnConfig['filterTable']['evtType'] + ", " + columnConfig['filterTable']['action'] + ") "
+                "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)")
+    # use the current number of record in database as id
+    getNumRecord = ("SELECT COUNT(*) FROM " + databaseConfig['filterTable'])
+    cursor.execute(getNumRecord)
+    id = str(cursor.fetchone()[0] + 1)
+
+    category = filter[0]
+    dateStart = filter[1]
+    dateEnd = filter[2]
+    timeStart = filter[3]
+    timeEnd = filter[4]
+    sourceName = filter[5]
+    evtID = filter[6]
+    evtType = filter[7]
+    action = filter[8]
+
+    data_record = (id, category, dateStart, dateEnd, timeStart, timeEnd, sourceName, evtID, evtType, action)
+    cursor.execute(add_record, data_record)
+    cnx.commit()
+
+
+                  
+                  

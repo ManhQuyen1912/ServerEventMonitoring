@@ -2,11 +2,13 @@ import win32evtlog
 import util
 import datetime
 
-annouceFilterList = [[]]
+annouceFilterList = []
 
 
 def addFilter(evtCategory, dateStart, dateEnd, timeStart, timeEnd, sourceName, evtID, evtType, action):
     annouceFilterList.append([evtCategory, dateStart, dateEnd, timeStart, timeEnd, sourceName, evtID, evtType, action])
+    # print("Filter added")
+    # print(annouceFilterList)
 
 def timeLimitCheck(timeRecord, dateStart, dateEnd, timeStart, timeEnd):
     timeRC = datetime.strptime(timeRecord, "%Y-%m-%d %H:%M:%S")
