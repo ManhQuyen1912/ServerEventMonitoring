@@ -1,5 +1,6 @@
 import win32evtlog
 import datetime
+from SqlService import query
 
 def evtTypeToString(record):
     if record.EventType == win32evtlog.EVENTLOG_ERROR_TYPE:
@@ -107,4 +108,14 @@ def logRecord(record):
         file.write(recordToStr(record))
         #close
         file.close()
+# Query to matrix string
+def search(evtCategory, dateStart, dateEnd, timeStart, timeEnd, sourceName, evtID, evtType, action):
+    # query to database
+    records = query(evtCategory, dateStart, dateEnd, timeStart, timeEnd, sourceName, evtID, evtType, action)
+    # convert to matrix string
+    res = []
+    for record in records:
+        res.append(recordToStr(record))
+    return res
+    
 
