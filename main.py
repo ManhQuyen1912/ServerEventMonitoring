@@ -2,6 +2,8 @@ import threading
 from flask import Flask, request, jsonify
 import subprocess
 import winEvtMonitor
+import Configuration
+
 
 #flask app
 app = Flask(__name__)
@@ -14,9 +16,13 @@ def run_monitor():
 
 
 def main():
-    t2 = threading.Thread(target=run_monitor).start()
-    t1 = threading.Thread(target=run_flask).start()
+    # config load
+    monitorThread = threading.Thread(target=run_monitor).start()
+    flaskThread = threading.Thread(target=run_flask).start()
     UI = subprocess.Popen(['python', 'app.py'])
+    db = subprocess.Popen(['python', 'SqlService.py'])
+
+    
     
 if __name__ == "__main__":
     main()
