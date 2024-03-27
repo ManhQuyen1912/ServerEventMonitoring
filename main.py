@@ -4,6 +4,7 @@ import subprocess
 import winEvtMonitor
 import Configuration
 
+
 #flask app
 app = Flask(__name__)
 #function to run the thread
