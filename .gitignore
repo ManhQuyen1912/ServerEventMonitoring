@@ -4,6 +4,7 @@ logs/
 *.py[cod]
 *$py.class
 data.py
+config.ini
 
 # C extensions
 *.so
