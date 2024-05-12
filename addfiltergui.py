@@ -23,6 +23,11 @@ def post_top_level_select_datetime():
     TKINTER_WIDGET['frame_calendar'].grid_forget()
     # TKINTER_WIDGET['widget_Date'].destroy()
 
+def get_data():
+    global TKINTER_DATA
+    global TKINTER_WIDGET
+    
+
 def update_datetime():
     global TKINTER_DATA
     global TKINTER_WIDGET
@@ -139,6 +144,69 @@ def calendar():
     button_datetime_cancel = custk.CTkButton(master = TKINTER_WIDGET['frame_calendar'],text = "Cancel",fg_color="gray74",hover_color="#EEE",text_color="#000",width =70,command = post_top_level_select_datetime)
     button_datetime_cancel.grid(row = 3,column= 0,padx=60,pady=15,sticky='se',columnspan=3)
 
+def get_data():
+    global TKINTER_WIDGET
+    global TKINTER_DATA
+    #values= ['entry_category','entry_source_name','button_start_time','button_end_time','entry_event_id','combobox_event_type','combobox_send_to','entry_your_email']
+    TKINTER_DATA['filterList']=[]
+
+    # Lấy giá trị từ entry_event_category
+    event_category = TKINTER_WIDGET['entry_event_category'].get()
+    if event_category:
+        TKINTER_DATA['filterList'].append(event_category)
+    else:
+        TKINTER_DATA['filterList'].append('')
+    
+    # Lấy giá trị từ entry_source_name
+    source_name = TKINTER_WIDGET['entry_source_name'].get()
+    if source_name:
+        TKINTER_DATA['filterList'].append(source_name)
+    else:
+        TKINTER_DATA['filterList'].append('')
+    
+    # Lấy giá trị từ button_start_time
+    start_time = TKINTER_WIDGET['button_start_time'].cget('text')
+    if start_time:
+        TKINTER_DATA['filterList'].append(start_time)
+    else:
+        TKINTER_DATA['filterList'].append('')
+    
+    # Lấy giá trị từ button_end_time
+    end_time = TKINTER_WIDGET['button_end_time'].cget('text')
+    if end_time:
+        TKINTER_DATA['filterList'].append(end_time)
+    else:
+        TKINTER_DATA['filterList'].append('')
+    
+    # Lấy giá trị từ entry_event_id
+    event_id = TKINTER_WIDGET['entry_event_id'].get()
+    if event_id:
+        TKINTER_DATA['filterList'].append(event_id)
+    else:
+        TKINTER_DATA['filterList'].append('')
+    
+    # Lấy giá trị từ combobox_event_type
+    event_type = TKINTER_WIDGET['combobox_event_type'].get()
+    if event_type:
+        TKINTER_DATA['filterList'].append(event_type)
+    else:
+        TKINTER_DATA['filterList'].append('')
+    
+    # Lấy giá trị từ combobox_send_to
+    send_to = TKINTER_WIDGET['combobox_send_to'].get()
+    if send_to:
+        TKINTER_DATA['filterList'].append(send_to)
+    else:
+        TKINTER_DATA['filterList'].append('')
+    
+    # Lấy giá trị từ entry_your_email
+    your_email = TKINTER_WIDGET['entry_your_email'].get()
+    if your_email:
+        TKINTER_DATA['filterList'].append(your_email)
+    else:
+        TKINTER_DATA['filterList'].append('')
+    print(TKINTER_DATA['filterList'])
+
 def openAddFilterWindow():
     global TKINTER_WIDGET
     global TKINTER_DATA
@@ -209,3 +277,7 @@ def openAddFilterWindow():
 
     TKINTER_WIDGET['entry_your_email']=tb.Entry(frame1,font=fontjuan,width=15)
     TKINTER_WIDGET['entry_your_email'].grid(row=7,column=1,pady=5,padx=10)
+
+    # Button filter
+    TKINTER_WIDGET['button_filter']=custk.CTkButton(master=TKINTER_WIDGET['af'],text="Extract",width=70,command=get_data)
+    TKINTER_WIDGET['button_filter'].grid(row=1,column=0,padx=10,pady=15)

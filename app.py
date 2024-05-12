@@ -2,7 +2,7 @@ from tkinter import *
 from ttkbootstrap.constants import *
 import ttkbootstrap as tb
 from tkinter import ttk
-from main import *
+# from main import *
 from addfiltergui import *
 from table import *
 
