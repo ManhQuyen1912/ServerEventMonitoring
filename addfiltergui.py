@@ -3,82 +3,15 @@ from tkinter import *
 from tkcalendar import *
 import ttkbootstrap as tb
 import customtkinter as custk
+from SqlService import query
+from table import *
 
 TKINTER_WIDGET={}
 TKINTER_DATA={}
 
 fontjuan=("helvatica",14)
 
-def button_click(value):
-    global TKINTER_DATA
-    if value == 1:
-        TKINTER_DATA['select_start_or_end']=1
-        calendar()
-    else:
-        TKINTER_DATA['select_start_or_end']=0
-        calendar()
-
-def post_top_level_select_datetime():
-    global TKINTER_WIDGET
-    TKINTER_WIDGET['frame_calendar'].grid_forget()
-    # TKINTER_WIDGET['widget_Date'].destroy()
-
-def get_data():
-    global TKINTER_DATA
-    global TKINTER_WIDGET
-    
-
-def update_datetime():
-    global TKINTER_DATA
-    global TKINTER_WIDGET
-
-    new_date = TKINTER_WIDGET['entry_date'].get()
-    new_time = f"{new_date} {TKINTER_WIDGET['spinbox_hours'].get()}:{TKINTER_WIDGET['spinbox_minutes'].get()}"
-
-    # Destroy widget_Date
-    post_top_level_select_datetime()    
-
-    # Update Button Start Time or End Time
-    if TKINTER_DATA['select_start_or_end']==0:
-        TKINTER_WIDGET['button_start_time'].configure(text=new_time)
-    else:
-        TKINTER_WIDGET['button_end_time'].configure(text=new_time)
-
-def scroll_hours(event):
-    global TKINTER_WIDGET
-    global TKINTER_DATA
-
-    current_index = TKINTER_DATA['values_hours'].index(TKINTER_DATA['string_var_hours'].get())
-
-    if event.delta > 0:
-        if current_index < len(TKINTER_DATA['values_hours'])-1:
-            current_index += 1
-        else:
-            current_index = 0
-    else:
-        current_index -= 1
-    
-    TKINTER_DATA['string_var_hours'].set(TKINTER_DATA['values_hours'][current_index])
-    TKINTER_WIDGET['spinbox_hours'].config(textvariable=TKINTER_DATA['string_var_hours'])
-
-def scroll_minutes(event):
-    global TKINTER_WIDGET
-    global TKINTER_DATA
-
-    current_index = TKINTER_DATA['values_minutes'].index(TKINTER_WIDGET['spinbox_minutes'].get())
-
-    if event.delta > 0:
-        if current_index < len(TKINTER_DATA['values_minutes'])-1:
-            current_index += 1
-        else:
-            current_index = 0
-    else:
-        current_index -= 1
-    
-    TKINTER_DATA['string_var_minutes'].set(TKINTER_DATA['values_minutes'][current_index])
-    TKINTER_WIDGET['spinbox_minutes'].config(textvariable=TKINTER_DATA['string_var_minutes'])
-
-def calendar():
+def calen():
     global TKINTER_WIDGET
     global TKINTER_DATA
 
@@ -88,6 +21,10 @@ def calendar():
     # label Date
     label_date = Label(master = TKINTER_WIDGET['frame_calendar'],text="- Select Date -",width=20,height=5,font=("helvatica",18))
     label_date.grid(row=0, column=0, padx=5, columnspan=3)
+
+    # Calendar
+    # cal = Calendar(TKINTER_WIDGET['frame_calendar'], selectmode='day', date_pattern='dd/mm/y', maxdate=datetime.datetime.today())
+    # cal.grid(row=0, column=0, padx=20, pady=30, columnspan=3, sticky='s')
 
     # Entry calendar
     TKINTER_WIDGET['entry_date']= Entry(master=TKINTER_WIDGET['frame_calendar'],text="Calendar",width=15,font=fontjuan)
@@ -144,12 +81,77 @@ def calendar():
     button_datetime_cancel = custk.CTkButton(master = TKINTER_WIDGET['frame_calendar'],text = "Cancel",fg_color="gray74",hover_color="#EEE",text_color="#000",width =70,command = post_top_level_select_datetime)
     button_datetime_cancel.grid(row = 3,column= 0,padx=60,pady=15,sticky='se',columnspan=3)
 
-def get_data():
+def button_click(value):
+    global TKINTER_DATA
+    if value == 1:
+        TKINTER_DATA['select_start_or_end']=1
+        calen()
+    else:
+        TKINTER_DATA['select_start_or_end']=0
+        calen()
+
+def post_top_level_select_datetime():
+    global TKINTER_WIDGET
+    TKINTER_WIDGET['frame_calendar'].grid_forget()
+    # TKINTER_WIDGET['widget_Date'].destroy()
+
+def update_datetime():
+    global TKINTER_DATA
+    global TKINTER_WIDGET
+
+    new_date = TKINTER_WIDGET['entry_date'].get()
+    new_time = f"{new_date} {TKINTER_WIDGET['spinbox_hours'].get()}:{TKINTER_WIDGET['spinbox_minutes'].get()}"
+
+    # Destroy widget_Date
+    post_top_level_select_datetime()    
+
+    # Update Button Start Time or End Time
+    if TKINTER_DATA['select_start_or_end']==0:
+        TKINTER_WIDGET['button_start_time'].configure(text=new_time)
+    else:
+        TKINTER_WIDGET['button_end_time'].configure(text=new_time)
+
+def scroll_hours(event):
+    global TKINTER_WIDGET
+    global TKINTER_DATA
+
+    current_index = TKINTER_DATA['values_hours'].index(TKINTER_DATA['string_var_hours'].get())
+
+    if event.delta > 0:
+        if current_index < len(TKINTER_DATA['values_hours'])-1:
+            current_index += 1
+        else:
+            current_index = 0
+    else:
+        current_index -= 1
+    
+    TKINTER_DATA['string_var_hours'].set(TKINTER_DATA['values_hours'][current_index])
+    TKINTER_WIDGET['spinbox_hours'].config(textvariable=TKINTER_DATA['string_var_hours'])
+
+def scroll_minutes(event):
+    global TKINTER_WIDGET
+    global TKINTER_DATA
+
+    current_index = TKINTER_DATA['values_minutes'].index(TKINTER_WIDGET['spinbox_minutes'].get())
+
+    if event.delta > 0:
+        if current_index < len(TKINTER_DATA['values_minutes'])-1:
+            current_index += 1
+        else:
+            current_index = 0
+    else:
+        current_index -= 1
+    
+    TKINTER_DATA['string_var_minutes'].set(TKINTER_DATA['values_minutes'][current_index])
+    TKINTER_WIDGET['spinbox_minutes'].config(textvariable=TKINTER_DATA['string_var_minutes'])
+
+def get_data(tree):
     global TKINTER_WIDGET
     global TKINTER_DATA
     #values= ['entry_category','entry_source_name','button_start_time','button_end_time','entry_event_id','combobox_event_type','combobox_send_to','entry_your_email']
     TKINTER_DATA['filterList']=[]
 
+    #0
     # Lấy giá trị từ entry_event_category
     event_category = TKINTER_WIDGET['entry_event_category'].get()
     if event_category:
@@ -157,6 +159,7 @@ def get_data():
     else:
         TKINTER_DATA['filterList'].append('')
     
+    #1
     # Lấy giá trị từ entry_source_name
     source_name = TKINTER_WIDGET['entry_source_name'].get()
     if source_name:
@@ -164,6 +167,7 @@ def get_data():
     else:
         TKINTER_DATA['filterList'].append('')
     
+    #2
     # Lấy giá trị từ button_start_time
     start_time = TKINTER_WIDGET['button_start_time'].cget('text')
     if start_time:
@@ -171,6 +175,7 @@ def get_data():
     else:
         TKINTER_DATA['filterList'].append('')
     
+    #3
     # Lấy giá trị từ button_end_time
     end_time = TKINTER_WIDGET['button_end_time'].cget('text')
     if end_time:
@@ -178,6 +183,7 @@ def get_data():
     else:
         TKINTER_DATA['filterList'].append('')
     
+    #4
     # Lấy giá trị từ entry_event_id
     event_id = TKINTER_WIDGET['entry_event_id'].get()
     if event_id:
@@ -185,6 +191,7 @@ def get_data():
     else:
         TKINTER_DATA['filterList'].append('')
     
+    #5
     # Lấy giá trị từ combobox_event_type
     event_type = TKINTER_WIDGET['combobox_event_type'].get()
     if event_type:
@@ -192,6 +199,7 @@ def get_data():
     else:
         TKINTER_DATA['filterList'].append('')
     
+    #6
     # Lấy giá trị từ combobox_send_to
     send_to = TKINTER_WIDGET['combobox_send_to'].get()
     if send_to:
@@ -199,15 +207,22 @@ def get_data():
     else:
         TKINTER_DATA['filterList'].append('')
     
+    #7
     # Lấy giá trị từ entry_your_email
     your_email = TKINTER_WIDGET['entry_your_email'].get()
     if your_email:
         TKINTER_DATA['filterList'].append(your_email)
     else:
         TKINTER_DATA['filterList'].append('')
-    print(TKINTER_DATA['filterList'])
+    # print(TKINTER_DATA['filterList'])
+    logs = query(TKINTER_DATA['filterList'][0],'','','','',TKINTER_DATA['filterList'][1],TKINTER_DATA['filterList'][4],TKINTER_DATA['filterList'][5],'')
+    print(logs)
+    clear_tree(tree)
+    for log in logs:
+        inserttuple(log,tree)
+    TKINTER_WIDGET['af'].destroy()
 
-def openAddFilterWindow():
+def openAddFilterWindow(tree):
     global TKINTER_WIDGET
     global TKINTER_DATA
     
@@ -261,14 +276,14 @@ def openAddFilterWindow():
     TKINTER_WIDGET['label_event_type']=custk.CTkLabel(master=frame1,text="Event Type",font=fontjuan,corner_radius=7)
     TKINTER_WIDGET['label_event_type'].grid(row=5,column=0,padx=5,pady=5)
 
-    TKINTER_WIDGET['combobox_event_type']=custk.CTkComboBox(master=frame1,corner_radius=10,values = ("Information","Warning","Error","Audit Success","Audit Failure","Unknown"))        
+    TKINTER_WIDGET['combobox_event_type']=custk.CTkComboBox(master=frame1,corner_radius=10,values = ("","Information","Warning","Error","Audit Success","Audit Failure","Unknown"))        
     TKINTER_WIDGET['combobox_event_type'].grid(row=5,column=1,pady=5,padx=10)
 
     # Label and combobox send to
     TKINTER_WIDGET['label_send_to']=custk.CTkLabel(master=frame1,text="Send to",font=fontjuan,corner_radius=7)
     TKINTER_WIDGET['label_send_to'].grid(row=6,column=0,padx=5,pady=5)
 
-    TKINTER_WIDGET['combobox_send_to']=custk.CTkComboBox(master=frame1,corner_radius=10,values=("MSTeams","Email"))
+    TKINTER_WIDGET['combobox_send_to']=custk.CTkComboBox(master=frame1,corner_radius=10,values=("","MSTeams","Email"))
     TKINTER_WIDGET['combobox_send_to'].grid(row=6,column=1,pady=5,padx=10)
 
     # Label and entry your email
@@ -279,5 +294,5 @@ def openAddFilterWindow():
     TKINTER_WIDGET['entry_your_email'].grid(row=7,column=1,pady=5,padx=10)
 
     # Button filter
-    TKINTER_WIDGET['button_filter']=custk.CTkButton(master=TKINTER_WIDGET['af'],text="Extract",width=70,command=get_data)
+    TKINTER_WIDGET['button_filter']=custk.CTkButton(master=TKINTER_WIDGET['af'],text="Extract",width=70,command=lambda:get_data(tree))
     TKINTER_WIDGET['button_filter'].grid(row=1,column=0,padx=10,pady=15)

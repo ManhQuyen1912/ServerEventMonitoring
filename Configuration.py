@@ -93,6 +93,10 @@ class Configuration:
             sections[section] = self.config[section].items()
         return sections
 
+    def get_user(self):
+        return self.config.get('DATABASE', 'database')
+    
+
 # import json
 # fileConfig = Configuration()
 # columnConfig = fileConfig.get_all('COLUMNNAME')

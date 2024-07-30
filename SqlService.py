@@ -12,6 +12,9 @@ config = fileConfig.get_all('DATABASE')
 config = {key: value for key, value in config.items()}
 config['raise_on_warnings'] = bool(config['raise_on_warnings'])
 
+# user=fileConfig.get_user()
+# print(user)
+
 databaseConfig = fileConfig.get_all('TABLENAME')
 
 columnConfig = fileConfig.get_all('COLUMNNAME')
@@ -44,13 +47,50 @@ cursor = cnx.cursor()
 loadFilter()
 
 def query(evtCategory, dateStart, dateEnd, timeStart, timeEnd, sourceName, evtID, evtType, action):
-  queryStr = ("SELECT * FROM " + databaseConfig['eventtable'] + 
-              " WHERE " + columnConfig['eventtable']['Category'] + " = " + evtCategory +
-              " AND " + columnConfig['eventtable']['Time generated'] + " BETWEEN " + dateStart + " AND " + dateEnd +
-              " AND " + columnConfig['eventtable']['Source name'] + " = " + sourceName +
-              " AND " + columnConfig['eventtable']['evntID'] + " = " + evtID +
-              " AND " + columnConfig['eventtable']['Type'] + " = " + evtType)
+  # queryStr = ("SELECT * FROM " + databaseConfig['eventtable'] + 
+  #             " WHERE " + columnConfig['eventtable']['Category'] + " = " + evtCategory +
+  #             " AND " + columnConfig['eventtable']['Time generated'] + " BETWEEN " + dateStart + " AND " + dateEnd +
+  #             " AND " + columnConfig['eventtable']['Source name'] + " = " + sourceName +
+  #             " AND " + columnConfig['eventtable']['evntID'] + " = " + evtID +
+  #             " AND " + columnConfig['eventtable']['Type'] + " = " + evtType)
+  # cursor.execute(queryStr)
+  # return cursor.fetchall()
+  queryStr = "SELECT * FROM " + databaseConfig['eventtable'] + " WHERE "
+
+  if dateStart == "" or dateEnd == "":
+    dateStart = None
+    dateEnd = None
+  if timeStart == "" or timeEnd == "":
+    timeStart = None
+    timeEnd = None
+    # Build WHERE clause dynamically based on non-empty arguments
+  conditions = []
+  if evtCategory != "":
+    conditions.append(columnConfig['eventtable']['Category'] + " = '" + evtCategory + "'")
+  if dateStart is not None:
+    conditions.append(columnConfig['eventtable']['Time generated'] + " >= '" + dateStart + "'")
+  if dateEnd is not None:
+    conditions.append(columnConfig['eventtable']['Time generated'] + " <= '" + dateEnd + "'")
+  if timeStart is not None:
+    conditions.append(columnConfig['eventtable']['Time generated'] + " LIKE '" + timeStart + "%'")  # Handle partial time matches
+  if timeEnd is not None:
+    conditions.append(columnConfig['eventtable']['Time generated'] + " LIKE '%" + timeEnd + "'")  # Handle partial time matches
+  if sourceName != "":
+    conditions.append(columnConfig['eventtable']['Source name'] + " = '" + sourceName + "'")
+  if evtID != "":
+    conditions.append(columnConfig['eventtable']['evntID'] + " = '" + evtID + "'")
+  if evtType != "":
+    conditions.append(columnConfig['eventtable']['Type'] + " = '" + evtType + "'")
+
+  # Add conditions to the WHERE clause
+  if conditions:
+    queryStr += " AND ".join(conditions)
+  else:
+    queryStr = queryStr[:-6]  # Remove trailing " WHERE " if no conditions
+
+  # print(queryStr)
   cursor.execute(queryStr)
+  # print(cursor.fetchall())
   return cursor.fetchall()
 
 def insert(record):
@@ -70,6 +110,7 @@ def insert(record):
   eventStrings = str(record.StringInserts)
   
   data_record = (id, category, time, source, eventID, eventType, eventStrings)
+  # print(data_record)
   cursor.execute(add_record, data_record)
   cnx.commit()
 
@@ -96,6 +137,7 @@ def backup_filter(filter):
     cursor.execute(add_record, data_record)
     cnx.commit()
 
-
+# cursor.close()
+# cnx.close()
                   
                   

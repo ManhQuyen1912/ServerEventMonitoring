@@ -26,3 +26,19 @@ def insert(x,tree):
         text=1,
         values=(y[0],y[1],y[2],y[3],y[4],y[5])
     )
+    
+def clear_tree(tree):
+    # Get all existing children (rows)
+    children = tree.get_children()
+
+    # Efficiently delete all children in a loop
+    for child in children:
+        tree.delete(child)
+
+def inserttuple(y,tree):
+    tree.insert(
+        "",
+        tb.END,
+        text=1,
+        values=(y[1],y[3],y[2],y[4],y[5],y[6])
+    )
